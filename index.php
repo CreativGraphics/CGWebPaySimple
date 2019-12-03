@@ -27,6 +27,7 @@
   //        DYNAMICKÉ ÚDAJE KTORÉ JE MOŽNO ŤAHAŤ Z DATABÁZY        //
   //---------------------------------------------------------------//
 
+  $paymentNumber = "123456";                   // ID platby
   $orderNumber = "123456";                     // ID objednávky
   $price = "15039";                            // suma (musí byť v tvare bez desatinných čísel, suma 15039 reprezentuje 150,39€)
   $clientEmail = "email@example.com";          // email zákazníka na ktorý príde potvrdenie o platbe
@@ -42,7 +43,7 @@
   $cgWebPaySimple = new CGWebPaySimple($merchantNumber, $privateKey, $privateKeyPassword, $publicKey, $publicKeyGP, $production);
 
   // VYGENEROVANIE TLAČIDLA PRE ZAPLATENIE
-  $cgWebPaySimple->getForm($orderNumber, $price, $clientEmail, $returnURL, $buttonText);
+  $cgWebPaySimple->getForm($paymentNumber, $orderNumber, $price, $clientEmail, $returnURL, $buttonText);
   ?>
 </body>
 

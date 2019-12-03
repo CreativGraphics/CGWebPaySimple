@@ -19,11 +19,11 @@ class CGWebPaySimple
     }
   }
 
-  public function getForm($ornerNumber, $price, $userEmail, $returnURL, $buttonText)
+  public function getForm($paymentNumber, $orderNumber, $price, $userEmail, $returnURL, $buttonText)
   {
     $signature = "";
     $sign = new CSignature($this->privateKeyPath, $this->privateKeyPassword, $this->publicKeyPath);
-    $signature = $sign->sign($this->merchantNumber . "|CREATE_ORDER|$ornerNumber|$price|978|0|$returnURL|$userEmail");
+    $signature = $sign->sign($this->merchantNumber . "|CREATE_ORDER|$paymentNumber|$price|978|0|$orderNumber|$returnURL|$userEmail");
 
     $signaturesFolder = __DIR__ . "/signatures/";
 
@@ -31,11 +31,11 @@ class CGWebPaySimple
       mkdir($signaturesFolder);
     }
 
-    $signatureFile = fopen($signaturesFolder . "signature." . $ornerNumber . ".sign", "w");
+    $signatureFile = fopen($signaturesFolder . "signature." . $orderNumber . ".sign", "w");
     fwrite($signatureFile, $signature);
     fclose($signatureFile);
 
-    $signatureFileEncoded = fopen($signaturesFolder . "signature." . $ornerNumber . ".enc.sign", "w");
+    $signatureFileEncoded = fopen($signaturesFolder . "signature." . $orderNumber . ".enc.sign", "w");
     fwrite($signatureFileEncoded, urlencode($signature));
     fclose($signatureFileEncoded);
 
@@ -43,10 +43,11 @@ class CGWebPaySimple
     <form action="<?php echo $this->gpURL ?>" method="POST" id="cg-webpay-simple-form">
       <input type="hidden" name="MERCHANTNUMBER" value="<?php echo $this->merchantNumber ?>">
       <input type="hidden" name="OPERATION" value="CREATE_ORDER">
-      <input type="hidden" name="ORDERNUMBER" value="<?php echo $ornerNumber ?>">
+      <input type="hidden" name="ORDERNUMBER" value="<?php echo $paymentNumber ?>">
       <input type="hidden" name="AMOUNT" value="<?php echo $price ?>">
       <input type="hidden" name="CURRENCY" value="978">
       <input type="hidden" name="DEPOSITFLAG" value="0">
+      <input type="hidden" name="MERORDERNUM" value="<?php echo $orderNumber ?>">
       <input type="hidden" name="URL" value="<?php echo $returnURL ?>">
       <input type="hidden" name="EMAIL" value="<?php echo $userEmail ?>">
       <input type="hidden" name="DIGEST" value="<?php echo $signature ?>">

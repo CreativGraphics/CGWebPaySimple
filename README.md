@@ -16,6 +16,7 @@ $production = false;                         // prepnutie testovacieho a produk�
 
 ### Dynamické premenné
 ```php
+$paymentNumber = "123456";                   // ID platby
 $orderNumber = "123456";                     // ID objednávky
 $price = "15039";                            // suma (musí byť v tvare bez desatinných čísel, suma 15039 reprezentuje 150,39€)
 $clientEmail = "email@example.com";          // email zákazníka na ktorý príde potvrdenie o platbe
