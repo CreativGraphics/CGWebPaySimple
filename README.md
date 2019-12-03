@@ -34,4 +34,4 @@ $cgWebPaySimple = new CGWebPaySimple($merchantNumber, $privateKey, $privateKeyPa
 $cgWebPaySimple->getForm($paymentNumber, $orderNumber, $price, $clientEmail, $returnURL, $buttonText);
 ```
 
-Tento PHP script slúži len na integráciu samotného tlačidla pre platbu. Pre správu toho čo sa má stať po úspešnom/neúspešnom je potrebné si pozrieť dokumentáciu GP WebPay a zapracovať svojpomocne. (možno bude niekedy pridané)
+Tento PHP script slúži len na integráciu samotného tlačidla pre platbu. Pre správu toho čo sa má stať po úspešnom/neúspešnom zaplatení je potrebné si pozrieť dokumentáciu GP WebPay a zapracovať svojpomocne. (funkcionalita bude možno niekedy pridaná)
