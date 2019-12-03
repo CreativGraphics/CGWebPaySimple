@@ -31,7 +31,7 @@ $cgWebPaySimple = new CGWebPaySimple($merchantNumber, $privateKey, $privateKeyPa
 
 ### Vytvorenie tlačidla pre zaplatenie objednávky
 ```php
-$cgWebPaySimple->getForm($orderNumber, $price, $clientEmail, $returnURL, $buttonText);
+$cgWebPaySimple->getForm($paymentNumber, $orderNumber, $price, $clientEmail, $returnURL, $buttonText);
 ```
 
 Tento PHP script slúži len na integráciu samotného tlačidla pre platbu. Pre správu toho čo sa má stať po úspešnom/neúspešnom je potrebné si pozrieť dokumentáciu GP WebPay a zapracovať svojpomocne. (možno bude niekedy pridané)
