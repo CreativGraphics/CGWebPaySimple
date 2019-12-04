@@ -21,7 +21,7 @@
   $publicKeyGP = "gp_public_key_file_name";    // názov súboru verejného klúču portálu GP WebPay (klúč treba vložiť do zložky /cgwebpaysimple/key/)
   $returnURL = "https://exampleshop.com";      // URL adresa na ktorú bude zákazník presmerovaný po odoslaní platby
   $buttonText = "Zaplatiť";                    // text tlačidla - môže obsahovať aj HTML tagy (napr. fontawesome ikonky atď.)
-  $production = false;                         // prepnutie testovacieho a produkčného módu (false = testovanie, true = produkcia)
+  $production = false;                         // prepnutie testovacieho a produkčného módu (false = testovanie (default), true = produkcia)
 
   //---------------------------------------------------------------//
   //        DYNAMICKÉ ÚDAJE KTORÉ JE MOŽNO ŤAHAŤ Z DATABÁZY        //
@@ -40,10 +40,15 @@
   require_once 'cgwebpaysimple/CGWebPaySimple.php';
 
   // INICIALIZÁCIA PLUGINU
-  $cgWebPaySimple = new CGWebPaySimple($merchantNumber, $privateKey, $privateKeyPassword, $publicKey, $publicKeyGP, $production);
+  $cgWebPaySimple = new CGWebPaySimple($production); // parameter $production je nepovinný (default je false)
+  $cgWebPaySimple->init($merchantNumber, $privateKey, $privateKeyPassword, $publicKey, $publicKeyGP);
 
   // VYGENEROVANIE TLAČIDLA PRE ZAPLATENIE
   $cgWebPaySimple->getForm($paymentNumber, $orderNumber, $price, $clientEmail, $returnURL, $buttonText);
+
+  // ZÍSKANIE VÝZNAMOV KÓDOV KTORÉ VRÁTI PLATOBNÁ BRÁNA PO OBJEDN8VKE
+  echo $cgWebPaySimple->getPRCode();
+  echo $cgWebPaySimple->getSRCode();
   ?>
 </body>
 

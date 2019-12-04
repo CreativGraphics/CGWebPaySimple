@@ -4,19 +4,67 @@ require_once('signature.php');
 
 class CGWebPaySimple
 {
-  function CGWebPaySimple($merchantNumber, $privateKeyPath, $privateKeyPassword, $publicKeyPath, $publicKeyGPPath, $production = false)
+  function CGWebPaySimple($production = false)
+  {
+    require_once('return_codes.php');
+    $this->prCodes = $prCodes;
+    $this->srCodes = $srCodes;
+    if ($production) {
+      $this->gpURL = "https://3dsecure.gpwebpay.com/pgw/order.do";
+    } else {
+      $this->gpURL = "https://test.3dsecure.gpwebpay.com/pgw/order.do";
+    }
+  }
+
+  function getCodeText($type)
+  {
+    $text = null;
+    $array = null;
+    $code = null;
+    if ($type == "PR") {
+      $array = $this->prCodes;
+      if (isset($_GET["PRCODE"])) {
+        $code = $_GET["PRCODE"];
+        $text = "Neznáma odpoveď";
+      } elseif (isset($_POST["PRCODE"])) {
+        $code = $_POST["PRCODE"];
+        $text = "Neznáma odpoveď";
+      }
+    } elseif ($type == "SR") {
+      $array = $this->srCodes;
+      if (isset($_GET["SRCODE"])) {
+        $code = $_GET["SRCODE"];
+        $text = "Neznáma odpoveď";
+      } elseif (isset($_POST["SRCODE"])) {
+        $code = $_POST["SRCODE"];
+        $text = "Neznáma odpoveď";
+      }
+    }
+    foreach ($array as $responseCode) {
+      if ($responseCode["code"] == $code) {
+        $text = $responseCode["meaning"];
+      }
+    }
+    return $text;
+  }
+
+  public function getPRCode()
+  {
+    return $this->getCodeText('PR');
+  }
+
+  public function getSRCode()
+  {
+    return $this->getCodeText('SR');
+  }
+
+  public function init($merchantNumber, $privateKeyPath, $privateKeyPassword, $publicKeyPath, $publicKeyGPPath)
   {
     $this->merchantNumber = $merchantNumber;
     $this->privateKeyPath = __DIR__ . "/key/" . $privateKeyPath;
     $this->privateKeyPassword = $privateKeyPassword;
     $this->publicKeyPath = __DIR__ . "/key/" . $publicKeyPath;
     $this->publicKeyGPPath = __DIR__ . "/key/" . $publicKeyGPPath;
-
-    if ($production) {
-      $this->gpURL = "https://3dsecure.gpwebpay.com/pgw/order.do";
-    } else {
-      $this->gpURL = "https://test.3dsecure.gpwebpay.com/pgw/order.do";
-    }
   }
 
   public function getForm($paymentNumber, $orderNumber, $price, $userEmail, $returnURL, $buttonText)
