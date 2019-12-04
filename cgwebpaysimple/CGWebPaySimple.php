@@ -4,19 +4,63 @@ require_once('signature.php');
 
 class CGWebPaySimple
 {
-  function CGWebPaySimple($merchantNumber, $privateKeyPath, $privateKeyPassword, $publicKeyPath, $publicKeyGPPath, $production = false)
+  function CGWebPaySimple($production = false)
+  {
+    require_once('return_codes.php');
+    $this->prCodes = $prCodes;
+    $this->srCodes = $srCodes;
+    if ($production) {
+      $this->gpURL = "https://3dsecure.gpwebpay.com/pgw/order.do";
+    } else {
+      $this->gpURL = "https://test.3dsecure.gpwebpay.com/pgw/order.do";
+    }
+  }
+
+  public function getPRCode()
+  {
+    $prText = null;
+    $prCode = null;
+    if (isset($_GET["PRCODE"])) {
+      $prCode = $_GET["PRCODE"];
+    } elseif (isset($_POST["PRCODE"])) {
+      $prCode = $_POST["PRCODE"];
+    } else {
+      $prCode = null;
+    }
+    foreach ($this->prCodes as $code) {
+      if ($code->code == $prCode) {
+        $prText = $code->meaning;
+      }
+    }
+    return $prText;
+  }
+
+  public function getSRCode()
+  {
+    $srText = null;
+    $srCode = null;
+    if (isset($_GET["SRCODE"])) {
+      $srCode = $_GET["SRCODE"];
+    } elseif (isset($_POST["SRCODE"])) {
+      $srCode = $_POST["SRCODE"];
+    } else {
+      $srCode = null;
+    }
+    foreach ($this->srCodes as $code) {
+      if ($code->code == $srCode) {
+        $srText = $code->meaning;
+      }
+    }
+    return $srText;
+  }
+
+  public function init($merchantNumber, $privateKeyPath, $privateKeyPassword, $publicKeyPath, $publicKeyGPPath)
   {
     $this->merchantNumber = $merchantNumber;
     $this->privateKeyPath = __DIR__ . "/key/" . $privateKeyPath;
     $this->privateKeyPassword = $privateKeyPassword;
     $this->publicKeyPath = __DIR__ . "/key/" . $publicKeyPath;
     $this->publicKeyGPPath = __DIR__ . "/key/" . $publicKeyGPPath;
-
-    if ($production) {
-      $this->gpURL = "https://3dsecure.gpwebpay.com/pgw/order.do";
-    } else {
-      $this->gpURL = "https://test.3dsecure.gpwebpay.com/pgw/order.do";
-    }
   }
 
   public function getForm($paymentNumber, $orderNumber, $price, $userEmail, $returnURL, $buttonText)
