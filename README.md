@@ -43,6 +43,8 @@ $cgWebPaySimple->init($merchantNumber, $privateKey, $privateKeyPassword, $public
 
 ### Vytvorenie tlačidla pre zaplatenie objednávky
 
+Použité parametre sú popísané v sekcii **Nastavenie premenných** vyššie
+
 ```php
 $cgWebPaySimple->getForm($paymentNumber, $orderNumber, $price, $clientEmail, $returnURL, $buttonText);
 ```
