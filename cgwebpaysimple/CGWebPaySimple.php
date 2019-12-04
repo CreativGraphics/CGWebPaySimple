@@ -16,42 +16,46 @@ class CGWebPaySimple
     }
   }
 
-  public function getPRCode()
+  function getCodeText($type)
   {
-    $prText = null;
-    $prCode = null;
-    if (isset($_GET["PRCODE"])) {
-      $prCode = $_GET["PRCODE"];
-    } elseif (isset($_POST["PRCODE"])) {
-      $prCode = $_POST["PRCODE"];
-    } else {
-      $prCode = null;
-    }
-    foreach ($this->prCodes as $code) {
-      if ($code->code == $prCode) {
-        $prText = $code->meaning;
+    $text = null;
+    $array = null;
+    $code = null;
+    if ($type == "PR") {
+      $array = $this->prCodes;
+      if (isset($_GET["PRCODE"])) {
+        $code = $_GET["PRCODE"];
+        $text = "Neznáma odpoveď";
+      } elseif (isset($_POST["PRCODE"])) {
+        $code = $_POST["PRCODE"];
+        $text = "Neznáma odpoveď";
+      }
+    } elseif ($type == "SR") {
+      $array = $this->srCodes;
+      if (isset($_GET["SRCODE"])) {
+        $code = $_GET["SRCODE"];
+        $text = "Neznáma odpoveď";
+      } elseif (isset($_POST["SRCODE"])) {
+        $code = $_POST["SRCODE"];
+        $text = "Neznáma odpoveď";
       }
     }
-    return $prText;
+    foreach ($array as $responseCode) {
+      if ($responseCode["code"] == $code) {
+        $text = $responseCode["meaning"];
+      }
+    }
+    return $text;
+  }
+
+  public function getPRCode()
+  {
+    return $this->getCodeText('PR');
   }
 
   public function getSRCode()
   {
-    $srText = null;
-    $srCode = null;
-    if (isset($_GET["SRCODE"])) {
-      $srCode = $_GET["SRCODE"];
-    } elseif (isset($_POST["SRCODE"])) {
-      $srCode = $_POST["SRCODE"];
-    } else {
-      $srCode = null;
-    }
-    foreach ($this->srCodes as $code) {
-      if ($code->code == $srCode) {
-        $srText = $code->meaning;
-      }
-    }
-    return $srText;
+    return $this->getCodeText('SR');
   }
 
   public function init($merchantNumber, $privateKeyPath, $privateKeyPassword, $publicKeyPath, $publicKeyGPPath)

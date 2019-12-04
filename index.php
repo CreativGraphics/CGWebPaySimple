@@ -45,6 +45,10 @@
 
   // VYGENEROVANIE TLAČIDLA PRE ZAPLATENIE
   $cgWebPaySimple->getForm($paymentNumber, $orderNumber, $price, $clientEmail, $returnURL, $buttonText);
+
+  // ZÍSKANIE VÝZNAMOV KÓDOV KTORÉ VRÁTI PLATOBNÁ BRÁNA PO OBJEDN8VKE
+  echo $cgWebPaySimple->getPRCode();
+  echo $cgWebPaySimple->getSRCode();
   ?>
 </body>
 
