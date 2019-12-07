@@ -41,12 +41,20 @@ $cgWebPaySimple = new CGWebPaySimple($production);        // parameter $producti
 $cgWebPaySimple->init($merchantNumber, $privateKey, $privateKeyPassword, $publicKey, $publicKeyGP);
 ```
 
-### Vytvorenie tlačidla pre zaplatenie objednávky
+### Zaplatenie objednávky
 
 Použité parametre sú popísané v sekcii **Nastavenie premenných** vyššie
 
+#### Vytvorenie tlačidla pre zaplatenie
+
 ```php
 $cgWebPaySimple->getForm($paymentNumber, $orderNumber, $price, $clientEmail, $returnURL, $buttonText);
+```
+
+#### Priame presmerovanie na platbu bez tlačidla
+
+```php
+$cgWebPaySimple->openPayment($paymentNumber, $orderNumber, $price, $clientEmail, $returnURL);
 ```
 
 ### Získanie významov kódov
