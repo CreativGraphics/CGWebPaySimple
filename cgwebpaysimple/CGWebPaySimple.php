@@ -67,8 +67,7 @@ class CGWebPaySimple
     $this->publicKeyGPPath = __DIR__ . "/key/" . $publicKeyGPPath;
   }
 
-  public function getForm($paymentNumber, $orderNumber, $price, $userEmail, $returnURL, $buttonText)
-  {
+  function getSignature($paymentNumber, $orderNumber, $price, $userEmail, $returnURL){
     $signature = "";
     $sign = new CSignature($this->privateKeyPath, $this->privateKeyPassword, $this->publicKeyPath);
     $signature = $sign->sign($this->merchantNumber . "|CREATE_ORDER|$paymentNumber|$price|978|0|$orderNumber|$returnURL|$userEmail");
@@ -87,6 +86,13 @@ class CGWebPaySimple
     fwrite($signatureFileEncoded, urlencode($signature));
     fclose($signatureFileEncoded);
 
+    return $signature;
+  }
+
+  public function getForm($paymentNumber, $orderNumber, $price, $userEmail, $returnURL, $buttonText)
+  {
+    $signature = $this->getSignature($paymentNumber, $orderNumber, $price, $userEmail, $returnURL);
+
     ?>
     <form action="<?php echo $this->gpURL ?>" method="POST" id="cg-webpay-simple-form">
       <input type="hidden" name="MERCHANTNUMBER" value="<?php echo $this->merchantNumber ?>">
@@ -101,6 +107,29 @@ class CGWebPaySimple
       <input type="hidden" name="DIGEST" value="<?php echo $signature ?>">
       <button type="submit"><?php echo $buttonText ?></button>
     </form>
+<?php
+  }
+
+  public function openPayment($paymentNumber, $orderNumber, $price, $userEmail, $returnURL){
+    
+    $signature = $this->getSignature($paymentNumber, $orderNumber, $price, $userEmail, $returnURL);
+
+    ?>
+    <form action="<?php echo $this->gpURL ?>" method="POST" id="cg-webpay-simple-form">
+      <input type="hidden" name="MERCHANTNUMBER" value="<?php echo $this->merchantNumber ?>">
+      <input type="hidden" name="OPERATION" value="CREATE_ORDER">
+      <input type="hidden" name="ORDERNUMBER" value="<?php echo $paymentNumber ?>">
+      <input type="hidden" name="AMOUNT" value="<?php echo $price ?>">
+      <input type="hidden" name="CURRENCY" value="978">
+      <input type="hidden" name="DEPOSITFLAG" value="0">
+      <input type="hidden" name="MERORDERNUM" value="<?php echo $orderNumber ?>">
+      <input type="hidden" name="URL" value="<?php echo $returnURL ?>">
+      <input type="hidden" name="EMAIL" value="<?php echo $userEmail ?>">
+      <input type="hidden" name="DIGEST" value="<?php echo $signature ?>">
+    </form>
+    <script>
+      document.getElementById("cg-webpay-simple-form").submit();
+    </script>
 <?php
   }
 }
