@@ -15,6 +15,7 @@ $publicKeyGP = "gp_public_key_file_name";        // názov súboru verejného kl
 $returnURL = "https://exampleshop.com";          // URL adresa na ktorú bude zákazník presmerovaný po odoslaní platby
 $buttonText = "Zaplatiť";                        // text tlačidla - môže obsahovať aj HTML tagy (napr. fontawesome ikonky atď.)
 $production = false;                             // prepnutie testovacieho a produkčného módu (false = testovanie, true = produkcia)
+$depositflag = 0;                                // 0 = po schválení platby ju treba manuálne potvrdiť v systéme GPWebPay, 1 = platba sa úp schválení automaticky potvrdí
 ```
 
 ### Dynamické premenné
@@ -48,13 +49,13 @@ Použité parametre sú popísané v sekcii **Nastavenie premenných** vyššie
 #### Vytvorenie tlačidla pre zaplatenie
 
 ```php
-$cgWebPaySimple->getForm($paymentNumber, $orderNumber, $price, $clientEmail, $returnURL, $buttonText);
+$cgWebPaySimple->getForm($paymentNumber, $orderNumber, $price, $clientEmail, $depositflag, $returnURL, $buttonText);
 ```
 
 #### Priame presmerovanie na platbu bez tlačidla
 
 ```php
-$cgWebPaySimple->openPayment($paymentNumber, $orderNumber, $price, $clientEmail, $returnURL);
+$cgWebPaySimple->openPayment($paymentNumber, $orderNumber, $price, $clientEmail, $depositflag, $returnURL);
 ```
 
 ### Získanie významov kódov

@@ -22,6 +22,7 @@
   $returnURL = "https://exampleshop.com";      // URL adresa na ktorú bude zákazník presmerovaný po odoslaní platby
   $buttonText = "Zaplatiť";                    // text tlačidla - môže obsahovať aj HTML tagy (napr. fontawesome ikonky atď.)
   $production = false;                         // prepnutie testovacieho a produkčného módu (false = testovanie (default), true = produkcia)
+  $depositflag = 0;                            // 0 = po schválení platby ju treba manuálne potvrdiť v systéme GPWebPay, 1 = platba sa úp schválení automaticky potvrdí
 
   //---------------------------------------------------------------//
   //        DYNAMICKÉ ÚDAJE KTORÉ JE MOŽNO ŤAHAŤ Z DATABÁZY        //
@@ -44,7 +45,7 @@
   $cgWebPaySimple->init($merchantNumber, $privateKey, $privateKeyPassword, $publicKey, $publicKeyGP);
 
   // VYGENEROVANIE TLAČIDLA PRE ZAPLATENIE
-  $cgWebPaySimple->getForm($paymentNumber, $orderNumber, $price, $clientEmail, $returnURL, $buttonText);
+  $cgWebPaySimple->getForm($paymentNumber, $orderNumber, $price, $clientEmail, $returnURL, $depositflag, $buttonText);
 
   // ZÍSKANIE VÝZNAMOV KÓDOV KTORÉ VRÁTI PLATOBNÁ BRÁNA PO OBJEDN8VKE
   echo $cgWebPaySimple->getPRCode();
